@@ -1,0 +1,9 @@
+{% if latest_pledges %}
+    <ul>
+    {% for pledge in latest_pledges %}
+        <li><a href="/pawnbroker/{{ pledge.id }}/">{{ pledge }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No pledges are available.</p>
+{% endif %}

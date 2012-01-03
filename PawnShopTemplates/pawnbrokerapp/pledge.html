@@ -1,0 +1,6 @@
+<h1>{{ pledge }}</h1>
+<ul>
+{% for pledged_item in pledge.pledgeditem_set.all %}
+    <li>{{ pledged_item }}</li>
+{% endfor %}
+</ul>
