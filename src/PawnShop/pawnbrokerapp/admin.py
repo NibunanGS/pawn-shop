@@ -1,5 +1,5 @@
 from PawnShop.pawnbrokerapp.models import Ornament, PersonName, City, Pledge, \
-    Redemption, PledgedItem
+    Redemption, PledgedItem, DailyRedemptionList
 from django.contrib import admin
 
 class PledgedItemInline(admin.TabularInline):
@@ -19,6 +19,16 @@ class RedemptionAdmin(admin.ModelAdmin):
     search_fields = ['pledge__pledge_no', 'pledge__name__name', 'pledge__father_or_husband_name__name']
 admin.site.register(Redemption, RedemptionAdmin)
 
+class RedemptionInline(admin.TabularInline):
+    model = Redemption
+    extra = 1
+    
+class DailyRedemptionListAdmin(admin.ModelAdmin):
+    inlines = [RedemptionInline]
+    search_fields = ['date']
+    list_display = ('date', 'principle', 'interest', 'misc', 'total', 'updated')
+    list_filter = ['date']
+admin.site.register(DailyRedemptionList, DailyRedemptionListAdmin)
 
 
 class OrnamentAdmin(admin.ModelAdmin):

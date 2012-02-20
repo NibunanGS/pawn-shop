@@ -75,6 +75,8 @@ class Redemption(models.Model):
     interest = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
     misc = models.IntegerField(null=True, blank=True)
     total = models.DecimalField(decimal_places=2, max_digits=10, blank=True)
+    created = models.DateTimeField(editable=False, auto_now_add = True)
+    updated = models.DateTimeField(editable=False, auto_now = True)
     
     def save(self, *args, **kwargs):
         start_date = self.pledge.loan_date
@@ -82,7 +84,7 @@ class Redemption(models.Model):
         no_of_months = ((end_date.year - start_date.year) * 12) + (end_date.month - start_date.month)
         if(end_date.day - start_date.day > 0):
             no_of_months = no_of_months + 1
-        self.interest = ((self.pledge.principle * 2)/100)*(no_of_months - 1)
+        self.interest = ((self.pledge.principle * 2) / 100) * (no_of_months - 1)
         self.total = self.pledge.principle + self.interest
         
         self.pledge.status = "Closed"
@@ -91,3 +93,19 @@ class Redemption(models.Model):
     
     def __unicode__(self):
         return "Pledge: [" + str(self.pledge) + "], Redemption Date:" + str(self.date) + ", Total:" + str(self.total)
+
+class DailyRedemptionList(models.Model):
+    date = models.DateField(default=datetime.datetime.now(), unique=True)
+    principle = models.IntegerField()
+    interest = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
+    misc = models.IntegerField(null=True, blank=True)
+    total = models.DecimalField(decimal_places=2, max_digits=15, blank=True)
+    created = models.DateTimeField(editable=False, auto_now_add = True)
+    updated = models.DateTimeField(editable=False, auto_now = True)
+    
+    class Meta:
+        ordering = ['-date']
+    
+    def __unicode__(self):
+        return str(self.date) + "-> Principle" + str(self.principle) + ", Interest" + str(self.interest) + ", Misc" + str(self.misc) + ", Total:" + str(self.total)
+
