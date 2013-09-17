@@ -1,3 +1,9 @@
+{% block title %}{{ title }} | {% trans 'Sri Selva Vinayakar Bankers Admin' %}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">{% 'Sri Selva Vinayakar Bankers' %}</h1>
+{% endblock %}
+
 {% if latest_pledges %}
     <ul>
     {% for pledge in latest_pledges %}

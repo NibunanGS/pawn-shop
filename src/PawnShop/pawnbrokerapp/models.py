@@ -50,7 +50,9 @@ class Pledge(models.Model):
     
     def save(self, *args, **kwargs):
         self.advance_interest = (self.principle * 2) / 100
-        if self.principle >= 2500:
+        if self.principle > 5000 and self.principle < 6000:
+            self.document = 150 - self.advance_interest
+        elif self.principle >= 6000:
             self.document = (self.principle * 0.5) / 100
         else:
             self.document = (self.principle * 1) / 100
