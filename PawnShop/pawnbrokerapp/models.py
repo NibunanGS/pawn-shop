@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 from django.core.exceptions import ValidationError
+from django.db.models import signals
 
 # Create your models here.
 class Ornament(models.Model):
@@ -191,7 +192,7 @@ class Redemption(models.Model):
     pledge = models.ForeignKey(Pledge, unique=True)
     date = models.DateField(default=datetime.datetime.now(), verbose_name = "Redemption Date")
     interest = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
-    misc = models.IntegerField(null=True, default=0)
+    misc = models.IntegerField(null=True, default=0, blank=True)
     total = models.DecimalField(decimal_places=2, max_digits=10, blank=True)
     daily_balance_sheet = models.ForeignKey(DailyBalanceSheet, editable=False, null = True)
     created = models.DateTimeField(editable=False, auto_now_add = True)
@@ -216,12 +217,14 @@ class Redemption(models.Model):
     def __add_to_balancesheet(self, balancesheet):
         balancesheet.redempted_principle = balancesheet.redempted_principle + self.pledge.principle
         balancesheet.redempted_interest = balancesheet.redempted_interest + self.interest
-        balancesheet.redempted_misc_charges = balancesheet.redempted_misc_charges + self.misc
+        if self.misc:
+            balancesheet.redempted_misc_charges = balancesheet.redempted_misc_charges + self.misc
         
     def __detect_from_balancesheet(self, balancesheet, principle, interest, misc):
         balancesheet.redempted_principle = balancesheet.redempted_principle - principle
         balancesheet.redempted_interest = balancesheet.redempted_interest - interest
-        balancesheet.redempted_misc_charges = balancesheet.redempted_misc_charges - misc
+        if misc:
+            balancesheet.redempted_misc_charges = balancesheet.redempted_misc_charges - misc
         
     def __update_pledges_if_neccessary(self, previous_redemption):
         if previous_redemption.pledge.id != self.pledge.id:
@@ -291,7 +294,11 @@ class Redemption(models.Model):
         self.pledge.status = "Open"
         Pledge.save(self.pledge)
         super(Redemption, self).delete()
-    
+        
     def __unicode__(self):
         return "Pledge: [" + str(self.pledge) + "], Redemption Date:" + str(self.date) + ", Total:" + str(self.total)
+    
+# def deleteRedemption(sender, instance, **kwargs ):
+#     instance.deleteRedemption()
+# signals.pre_delete.connect(deleteRedemption, sender=Redemption)
     
