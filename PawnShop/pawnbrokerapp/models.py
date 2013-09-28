@@ -285,7 +285,7 @@ class Redemption(models.Model):
         self.__update_dailybalacesheet_and_pledge()
         super(Redemption, self).save(* args, **kwargs)
         
-    def delete(self):
+    def deleteRedemption(self):
         balanceSheet = self.daily_balance_sheet
         if balanceSheet:
             self.__detect_from_balancesheet(balanceSheet, self.pledge.principle, self.interest, self.misc)
@@ -293,12 +293,12 @@ class Redemption(models.Model):
             
         self.pledge.status = "Open"
         Pledge.save(self.pledge)
-        super(Redemption, self).delete()
+#         super(Redemption, self).delete()
         
     def __unicode__(self):
         return "Pledge: [" + str(self.pledge) + "], Redemption Date:" + str(self.date) + ", Total:" + str(self.total)
     
-# def deleteRedemption(sender, instance, **kwargs ):
-#     instance.deleteRedemption()
-# signals.pre_delete.connect(deleteRedemption, sender=Redemption)
+def deleteRedemption(sender, instance, **kwargs ):
+    instance.deleteRedemption()
+signals.pre_delete.connect(deleteRedemption, sender=Redemption, dispatch_uid="DeleteRedemption")
     
