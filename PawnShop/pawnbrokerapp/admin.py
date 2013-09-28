@@ -53,7 +53,8 @@ class PledgeAdmin(admin.ModelAdmin):
 admin.site.register(Pledge, PledgeAdmin)
 
 class RedemptionAdmin(admin.ModelAdmin):
-    actions = None
+    actions_on_top = False
+    actions_on_bottom = True
     list_display = ('pledge_no','pledge_customer_name','pledge_loan_date','pledge_principle','date', 'interest', 'total')
     list_filter = ['date']
     list_per_page = 25
@@ -84,7 +85,8 @@ class CustomerAdmin(admin.ModelAdmin):
 admin.site.register(Customer, CustomerAdmin)
 
 class DailyBalanceSheetAdmin(admin.ModelAdmin):
-    actions = None
+    actions_on_top = False
+    actions_on_bottom = True
     fields = ('date', ('previous_balance', 'credit'), ('pledged_principle', 'redempted_advance_interest', 'document_charges'), 'total_pledged_amount', ('redempted_principle', 'redempted_interest', 'redempted_misc_charges'), 'total_redempted_amount', 'misc_debit', 'amount_in_hand', 'remarks')
     readonly_fields = ('pledged_principle', 'redempted_advance_interest', 'document_charges', 'total_pledged_amount', 'redempted_principle', 'redempted_interest', 'total_redempted_amount')
     list_display = ('date', 'pledged_principle', 'total_pledged_amount', 'redempted_principle', 'total_redempted_amount', 'misc_debit','previous_balance', 'amount_in_hand')

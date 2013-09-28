@@ -3,8 +3,18 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+# Example Gmail settings if you need to send email from a local Django dev
+# site. Uncomment the following and change the username and password to
+# whatever they are for your Gmail account. Make sure don't use Gmail for
+# sending email on a production website.
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'xxxxxx@gmail.com'
+EMAIL_HOST_PASSWORD = 'xxxxxx'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
 ADMINS = (
-    # ('Nibunan G S', 'nibunan@gmail.com'),
+    ('Nibunan G S', 'nibunan@gmail.com'),
 )
 
 MANAGERS = ADMINS
@@ -42,6 +52,8 @@ USE_I18N = False
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale
 USE_L10N = True
+USE_THOUSAND_SEPARATOR = True
+FORMAT_MODULE_PATH = 'PawnShop.formats'
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -96,6 +108,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
